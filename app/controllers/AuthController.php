@@ -27,10 +27,6 @@ class AuthController extends \BaseController {
 
         $this->addNumberToVerify($number, $countryCode);
 
-
-        //SEND TEXT MESSAGE TO TWILLIO!
-
-
         return Response::json(['complete'=> TRUE]);
     }
 
@@ -73,21 +69,31 @@ class AuthController extends \BaseController {
     }
 
     private function addNumberToVerify($number, $countryCode){
+        $pin = $this->createVerifyKey();
         $tempuser = VerifyPhone::where('phone', '=', $number)->first();;
         if($tempuser)
         {
-            $tempuser->verify = $this->createVerifyKey();
+            $tempuser->verify = $pin;
             $tempuser->save();
         }
         else
         {
             $tempuser = new VerifyPhone;
             $tempuser->phone = $number;
-            $tempuser->verify = $this->createVerifyKey();
+            $tempuser->verify = $pin;
             $tempuser->complete = 0;
             $tempuser->country_code = $countryCode;
             $tempuser->save();
         }
+        $this->smsVerifyCode($number, $pin);
+    }
+
+    private function smsVerifyCode($number, $pin){
+        Sms::send([
+            'to'=>$number,
+            'text'=>
+                "Hello from Fetch! Please enter the following pin to login to your account: $pin"
+        ]);
     }
 
     private function verifyNumberWithCode($number, $code){

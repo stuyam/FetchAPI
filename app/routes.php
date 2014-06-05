@@ -21,3 +21,7 @@ Route::post('/auth/set_number', 'AuthController@store');
 Route::post('/auth/verify_number', 'AuthController@verify');
 
 Route::post('/auth/create_account', 'AuthController@create');
+
+Route::post('/test', function(){
+    Sms::send(['to'=>'+15083142814', 'text'=>'hello world']);
+});
