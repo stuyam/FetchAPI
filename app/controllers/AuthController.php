@@ -12,15 +12,20 @@ class AuthController extends \BaseController {
     }
 
 	public function store(){
-        $number = Input::get('number');
-        $countryCode = Input::get('countryCode');
+        $number = Input::get('phone');
+        $countryCode = Input::get('country_code');
 
         if( ! $this->validator->authStore(Input::all()) )
         {
             return Response::make($this->validator->errors());
         }
 
-        $this->addNumberToVerify($number, $this->createVerifyKey(), 0, $countryCode);
+        if($this->phoneExists($number))
+        {
+            return Response::make('number already exists for a user');
+        }
+
+        $this->addNumberToVerify($number, $countryCode);
 
 
         //SEND TEXT MESSAGE TO TWILLIO!
@@ -30,8 +35,8 @@ class AuthController extends \BaseController {
     }
 
     public function verify(){
-        $number = Input::get('number');
-        $code = Input::get('code');
+        $number = Input::get('phone');
+        $code = Input::get('pin');
 
         if( ! $this->validator->authVerify(Input::all()) )
         {
@@ -46,8 +51,8 @@ class AuthController extends \BaseController {
         return Response::make('Complete!');
     }
 
-    public function storeUser(){
-        $number = Input::get('number');
+    public function create(){
+        $number = Input::get('phone');
         $username = Input::get('username');
         $name = Input::get('name');
 
@@ -57,7 +62,7 @@ class AuthController extends \BaseController {
         }
 
         $check = $this->isNumberVerified($number);
-        if(! $check ){
+        if( ! $check ){
             return Response::make('Number has not been validated');
         }
 
@@ -67,18 +72,27 @@ class AuthController extends \BaseController {
 
     }
 
-    private function addNumberToVerify($number, $key, $complete, $countryCode){
-        $user = new VerifyPhone;
-        $user->phone = $number;
-        $user->verify = $key;
-        $user->complete = $complete;
-        $user->country_code = $countryCode;
-        $user->save();
+    private function addNumberToVerify($number, $countryCode){
+        $tempuser = VerifyPhone::where('phone', '=', $number)->first();;
+        if($tempuser)
+        {
+            $tempuser->verify = $this->createVerifyKey();
+            $tempuser->save();
+        }
+        else
+        {
+            $tempuser = new VerifyPhone;
+            $tempuser->phone = $number;
+            $tempuser->verify = $this->createVerifyKey();
+            $tempuser->complete = 0;
+            $tempuser->country_code = $countryCode;
+            $tempuser->save();
+        }
     }
 
     private function verifyNumberWithCode($number, $code){
-        $instance =  VerifyPhone::where('phone', '=', $number)->where('verify', '=', $code)->get();
-        if(empty($instance)){
+        $instance =  VerifyPhone::where('phone', '=', $number)->where('verify', '=', $code)->first();
+        if( ! $instance){
             return FALSE;
         }
         $instance->complete = 1;
@@ -86,9 +100,14 @@ class AuthController extends \BaseController {
         return TRUE;
     }
 
+    private function phoneExists($number)
+    {
+        return User::where('phone', '=', $number)->count() > 0 ? TRUE : FALSE;
+    }
+
     private function isNumberVerified($number){
-        $instance = VerifyPhone::where('phone', '=', $number)->where('complete', '=', 1)->get();
-        if(empty($instance))
+        $instance = VerifyPhone::where('phone', '=', $number)->where('complete', '=', 1)->first();
+        if( ! $instance)
         {
             return FALSE;
         }
@@ -105,6 +124,7 @@ class AuthController extends \BaseController {
         $user->phone_hash = md5($number);
         $user->token = md5(uniqid());
         $user->save();
+        VerifyPhone::where('phone', '=', $number)->delete();
     }
 
     private function createVerifyKey(){

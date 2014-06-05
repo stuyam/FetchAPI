@@ -9,8 +9,8 @@ class Validator {
     public function authStore($input)
     {
         $rules = [
-            'number'      => 'required',
-            'countryCode' => 'required'
+            'phone'      => 'required',
+            'country_code' => 'required'
         ];
 
         return $this->validate($input, $rules);
@@ -19,8 +19,8 @@ class Validator {
     public function authVerify($input)
     {
         $rules = [
-            'number' => 'required',
-            'code'   => 'required'
+            'phone' => 'required',
+            'pin'   => 'required'
         ];
 
         return $this->validate($input, $rules);
@@ -31,7 +31,7 @@ class Validator {
         $rules = [
             'username' => 'required|alpha_num|unique:users',
             'name' => 'required',
-            'number' => 'required',
+            'phone' => 'required',
         ];
 
         return $this->validate($input, $rules);
