@@ -54,7 +54,7 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'fetch2.cj8vxir7t4ha.us-east-1.rds.amazonaws.com',
+			'host'      => 'fetch2.cj8vxir7t4ha.us-east-1.rds.amazonaws.com:3306',
 			'database'  => 'fetch2',
 			'username'  => 'fetch2',
 			'password'  => 'tMxGxzZYUpe4N7B',
