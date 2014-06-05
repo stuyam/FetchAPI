@@ -25,7 +25,7 @@ $app = new Illuminate\Foundation\Application;
 */
 
 $env = $app->detectEnvironment(function(){
-    dd(getenv('ENV'));
+    
     return getenv('ENV') ?: 'local';
 
 });
