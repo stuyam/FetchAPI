@@ -15,7 +15,7 @@ class CreateVerifyTable extends Migration {
 		Schema::create('verify', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('phone');
+			$table->string('phone')->unique();
 			$table->string('country_code');
 			$table->integer('verify');
 			$table->boolean('complete');

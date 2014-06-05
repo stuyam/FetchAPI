@@ -17,11 +17,11 @@ class CreateUsersTable extends Migration {
 			$table->increments('id');
 			$table->string('username')->unique();
 			$table->string('name');
-			$table->string('phone');
+			$table->string('phone')->unique();
 			$table->string('country_code');
-			$table->string('phone_hash');
+			$table->string('phone_hash')->unique();
 			$table->integer('verify')->nullable();
-			$table->string('token');
+			$table->string('token')->unique();
 			$table->timestamps();
 		});
 	}
