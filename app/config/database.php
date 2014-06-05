@@ -54,10 +54,10 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => '127.0.0.1',
-			'database'  => 'Fetch',
-			'username'  => 'root',
-			'password'  => 'root',
+			'host'      => 'fetch2.cj8vxir7t4ha.us-east-1.rds.amazonaws.com:3306',
+			'database'  => 'fetch2',
+			'username'  => 'fetch2',
+			'password'  => 'tMxGxzZYUpe4N7B',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
