@@ -18,6 +18,7 @@ class CreateVerifyTable extends Migration {
 			$table->string('phone')->unique();
 			$table->string('country_code');
 			$table->integer('verify');
+            $table->integer('expire_verify');
 			$table->boolean('complete');
 			$table->timestamps();
 		});

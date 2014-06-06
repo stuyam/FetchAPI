@@ -1,6 +1,8 @@
-<?php
+<?php namespace Fetch\v1\Controllers;
 
-use Fetch\Services\Validator;
+use \Fetch\v1\Services\Validator;
+use \Input, \Response, \VerifyPhone, \User, \Sms;
+
 
 class AuthController extends \BaseController {
 
@@ -11,7 +13,7 @@ class AuthController extends \BaseController {
         $this->validator = $validator;
     }
 
-	public function store(){
+	public function postSetNumber(){
         $number = Input::get('phone');
         $countryCode = Input::get('country_code');
 
@@ -30,7 +32,7 @@ class AuthController extends \BaseController {
         return Response::json(['complete'=> TRUE]);
     }
 
-    public function verify(){
+    public function postVerifyNumber(){
         $number = Input::get('phone');
         $code = Input::get('pin');
 
@@ -47,7 +49,7 @@ class AuthController extends \BaseController {
         return Response::make('Complete!');
     }
 
-    public function create(){
+    public function postCreateAccount(){
         $number = Input::get('phone');
         $username = Input::get('username');
         $name = Input::get('name');

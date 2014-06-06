@@ -1,4 +1,4 @@
-<?php namespace Fetch\Services;
+<?php namespace Fetch\v1\Services;
 
 use Validator as V;
 

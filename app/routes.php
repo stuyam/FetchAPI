@@ -16,12 +16,12 @@ Route::get('/', function()
 	return View::make('hello');
 });
 
-Route::post('/auth/set_number', 'AuthController@store');
+Route::group(['namespace' => 'Fetch\v1\Controllers', 'prefix' => 'v1'], function()
+{
+    Route::controller('/auth', 'AuthController');
 
-Route::post('/auth/verify_number', 'AuthController@verify');
-
-Route::post('/auth/create_account', 'AuthController@create');
-
-Route::post('/test', function(){
-    Sms::send(['to'=>'+15083142814', 'text'=>'hello world']);
+//    Route::group(['before' => 'authenticate'], function()
+//    {
+//
+//    });
 });
