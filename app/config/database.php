@@ -54,10 +54,10 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'fetch2.cj8vxir7t4ha.us-east-1.rds.amazonaws.com',
-			'database'  => 'fetch2',
-			'username'  => 'fetch2',
-			'password'  => 'tMxGxzZYUpe4N7B',
+			'host'      => 'today.cj8vxir7t4ha.us-east-1.rds.amazonaws.com',
+			'database'  => 'today',
+			'username'  => 'today',
+			'password'  => 'mypassword',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
