@@ -33,5 +33,5 @@ Route::group(['namespace' => 'Fetch\v1\Controllers', 'prefix' => 'v1'], function
 /////////////// 404 ///////////////
 App::missing(function($exception)
 {
-    return Response::json(['404'=> 'Page Not Found']);
+    return Response::json(['404'=> 'Page Not Found'], 404);
 });
