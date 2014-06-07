@@ -31,7 +31,7 @@ class Validator {
         $rules = [
             'username' => 'required|alpha_num|min:3|max:16|unique:users',
             'name'     => 'required|min:3|max:30',
-            'token'    => 'required',
+            'pin_token'    => 'required',
             'phone'    => 'required',
         ];
 

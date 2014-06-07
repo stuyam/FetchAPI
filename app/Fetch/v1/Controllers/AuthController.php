@@ -41,7 +41,7 @@ class AuthController extends \BaseController {
         $verify = $this->verifyNumberWithCode($number, $code);
         if( ! $verify )
         {
-            return Response::json('failed to validate number with code');
+            return Response::json('failed to validate number with code', 400);
         }
 
         $exists = $this->phoneExists($number);
@@ -73,7 +73,7 @@ class AuthController extends \BaseController {
 
         $check = $this->isNumberVerified($number, $token);
         if( ! $check ){
-            return Response::json('Number has not been validated');
+            return Response::json('Number has not been validated', 400);
         }
 
         $user = $this->createUserAccount($username, $name, $number, $check->country_code);
