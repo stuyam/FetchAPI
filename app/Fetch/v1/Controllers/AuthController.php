@@ -44,7 +44,7 @@ class AuthController extends \BaseController {
             return Response::json('failed to validate number with code');
         }
 
-        $exists = $this->phoneExists($number)
+        $exists = $this->phoneExists($number);
         if($exists)
         {
             return Response::json([
