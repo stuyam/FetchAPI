@@ -18,10 +18,9 @@ class CreateUsersTable extends Migration {
 			$table->string('username')->unique();
 			$table->string('name');
 			$table->string('phone')->unique();
-			$table->string('country_code');
-			$table->string('phone_hash')->unique();
-			$table->integer('verify')->nullable();
-			$table->string('token')->unique();
+            $table->string('country_code');
+            $table->string('phone_hash')->unique();
+            $table->string('token')->unique();
 			$table->timestamps();
 		});
 	}

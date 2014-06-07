@@ -7,6 +7,8 @@ use \Input, \Response, \VerifyPhone, \User, \Sms;
 class AuthController extends \BaseController {
 
     protected $validator;
+    protected $expiration = 600; //ten minutes
+    protected $tries = 4;
 
     public function __construct(Validator $validator)
     {
@@ -20,11 +22,6 @@ class AuthController extends \BaseController {
         if( ! $this->validator->authStore(Input::all()) )
         {
             return Response::make($this->validator->errors());
-        }
-
-        if($this->phoneExists($number))
-        {
-            return Response::make('number already exists for a user');
         }
 
         $this->addNumberToVerify($number, $countryCode);
@@ -41,15 +38,22 @@ class AuthController extends \BaseController {
             return Response::make($this->validator->errors());
         }
 
-        if( ! $this->verifyNumberWithCode($number, $code) )
+        $verify = $this->verifyNumberWithCode($number, $code);
+        if( ! $verify )
         {
             return Response::make('failed to validate number with code');
         }
 
-        return Response::make('Complete!');
+        if($this->phoneExists($number))
+        {
+            return Response::make('User exists and has logged in. USER ACCOUNT CREDENTIALS HERE');
+        }
+
+        return Response::make('Complete! Verfiy token is: '.$verify);
     }
 
     public function postCreateAccount(){
+        $token = Input::get('token');
         $number = Input::get('phone');
         $username = Input::get('username');
         $name = Input::get('name');
@@ -59,7 +63,7 @@ class AuthController extends \BaseController {
             return Response::make($this->validator->errors());
         }
 
-        $check = $this->isNumberVerified($number);
+        $check = $this->isNumberVerified($number, $token);
         if( ! $check ){
             return Response::make('Number has not been validated');
         }
@@ -76,6 +80,9 @@ class AuthController extends \BaseController {
         if($tempuser)
         {
             $tempuser->verify = $pin;
+            $tempuser->expire = time() + $this->expiration;
+            $tempuser->tries = 0;
+            $tempuser->token = NULL;
             $tempuser->save();
         }
         else
@@ -83,7 +90,8 @@ class AuthController extends \BaseController {
             $tempuser = new VerifyPhone;
             $tempuser->phone = $number;
             $tempuser->verify = $pin;
-            $tempuser->complete = 0;
+            $tempuser->expire = time() + $this->expiration;
+            $tempuser->tries = 0;
             $tempuser->country_code = $countryCode;
             $tempuser->save();
         }
@@ -99,13 +107,21 @@ class AuthController extends \BaseController {
     }
 
     private function verifyNumberWithCode($number, $code){
-        $instance =  VerifyPhone::where('phone', '=', $number)->where('verify', '=', $code)->first();
-        if( ! $instance){
+        $instance =  VerifyPhone::where('phone', '=', $number)->where('expire', '>', time())->first();
+        if( ! $instance )
+        {
             return FALSE;
         }
-        $instance->complete = 1;
+        if($instance->verify != $code || $instance->tries > $this->tries)
+        {
+            $instance->tries++;
+            $instance->save();
+            return FALSE;
+        }
+        $instance->token = sha1(uniqid('h493h4tD42jfsw', TRUE));
+        $instance->tries++;
         $instance->save();
-        return TRUE;
+        return $instance->token;
     }
 
     private function phoneExists($number)
@@ -113,8 +129,8 @@ class AuthController extends \BaseController {
         return User::where('phone', '=', $number)->count() > 0 ? TRUE : FALSE;
     }
 
-    private function isNumberVerified($number){
-        $instance = VerifyPhone::where('phone', '=', $number)->where('complete', '=', 1)->first();
+    private function isNumberVerified($number, $token){
+        $instance = VerifyPhone::where('phone', '=', $number)->where('token', '=', $token)->where('expire', '>', time())->first();
         if( ! $instance)
         {
             return FALSE;
@@ -129,10 +145,9 @@ class AuthController extends \BaseController {
         $user->name = $name;
         $user->phone = $number;
         $user->country_code = $country_code;
-        $user->phone_hash = md5($number);
-        $user->token = md5(uniqid());
+        $user->phone_hash = sha1($number);
+        $user->token = sha1(uniqid('m39jSUHDh3asdj3', TRUE));
         $user->save();
-        VerifyPhone::where('phone', '=', $number)->delete();
     }
 
     private function createVerifyKey(){
