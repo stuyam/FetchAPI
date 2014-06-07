@@ -21,12 +21,12 @@ class AuthController extends \BaseController {
 
         if( ! $this->validator->authStore(Input::all()) )
         {
-            return Response::make($this->validator->errors());
+            return Response::json($this->validator->errors(), 400);
         }
 
         $this->addNumberToVerify($number, $countryCode);
 
-        return Response::json(['complete'=> TRUE]);
+        return Response::json(NULL, 204);
     }
 
     public function postVerifyNumber(){
@@ -35,42 +35,57 @@ class AuthController extends \BaseController {
 
         if( ! $this->validator->authVerify(Input::all()) )
         {
-            return Response::make($this->validator->errors());
+            return Response::json($this->validator->errors());
         }
 
         $verify = $this->verifyNumberWithCode($number, $code);
         if( ! $verify )
         {
-            return Response::make('failed to validate number with code');
+            return Response::json('failed to validate number with code');
         }
 
-        if($this->phoneExists($number))
+        $exists = $this->phoneExists($number)
+        if($exists)
         {
-            return Response::make('User exists and has logged in. USER ACCOUNT CREDENTIALS HERE');
+            return Response::json([
+                'userid' => $exists->userid,
+                'token' => $exists->token,
+                'name' => $exists->name,
+                'username' => $exists->username,
+                'country_code' => $exists->country_code,
+                'phone' => $exists->phone,
+            ]);
         }
 
-        return Response::json(['token'=>$verify]);
+        return Response::json(['pin_token'=>$verify]);
     }
 
     public function postCreateAccount(){
-        $token = Input::get('token');
+        $token = Input::get('pin_token');
         $number = Input::get('phone');
         $username = Input::get('username');
         $name = Input::get('name');
 
         if( ! $this->validator->authStoreUser(Input::all()) )
         {
-            return Response::make($this->validator->errors());
+            return Response::json($this->validator->errors());
         }
 
         $check = $this->isNumberVerified($number, $token);
         if( ! $check ){
-            return Response::make('Number has not been validated');
+            return Response::json('Number has not been validated');
         }
 
-        $this->createUserAccount($username, $name, $number, $check->country_code);
+        $user = $this->createUserAccount($username, $name, $number, $check->country_code);
 
-        return Response::make('SUCCESS!');
+        return Response::json([
+            'userid' => $user->userid,
+            'token' => $user->token,
+            'name' => $user->name,
+            'username' => $user->username,
+            'country_code' => $user->country_code,
+            'phone' => $user->phone,
+        ]);
 
     }
 
@@ -126,7 +141,7 @@ class AuthController extends \BaseController {
 
     private function phoneExists($number)
     {
-        return User::where('phone', '=', $number)->count() > 0 ? TRUE : FALSE;
+        return User::where('phone', '=', $number)->first() ?: FALSE;
     }
 
     private function isNumberVerified($number, $token){
@@ -148,6 +163,7 @@ class AuthController extends \BaseController {
         $user->phone_hash = sha1($number);
         $user->token = sha1(uniqid('m39jSUHDh3asdj3', TRUE));
         $user->save();
+        return $user;
     }
 
     private function createVerifyKey(){

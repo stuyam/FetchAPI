@@ -23,7 +23,7 @@ Route::group(['namespace' => 'Fetch\v1\Controllers', 'prefix' => 'v1'], function
     Route::get('test', function(){
        return Response::make('Chod Whomper');
     });
-//    Route::group(['before' => 'authenticate'], function()
+//    Route::group(['before' => 'fetch_auth'], function()
 //    {
 //
 //    });
