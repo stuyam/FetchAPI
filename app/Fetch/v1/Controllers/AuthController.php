@@ -49,7 +49,7 @@ class AuthController extends \BaseController {
             return Response::make('User exists and has logged in. USER ACCOUNT CREDENTIALS HERE');
         }
 
-        return Response::make('Complete! Verfiy token is: '.$verify);
+        return Response::json(['token'=>$verify]);
     }
 
     public function postCreateAccount(){
