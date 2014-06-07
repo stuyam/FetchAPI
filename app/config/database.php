@@ -54,10 +54,10 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'today.cj8vxir7t4ha.us-east-1.rds.amazonaws.com',
-			'database'  => 'today',
-			'username'  => 'today',
-			'password'  => 'mypassword',
+			'host'      => 'localhost',
+			'database'  => 'forge',
+			'username'  => 'forge',
+			'password'  => 'u2FfmhgXzl5QESukvBYJ',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

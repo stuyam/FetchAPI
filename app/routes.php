@@ -18,8 +18,11 @@ Route::get('/', function()
 
 Route::group(['namespace' => 'Fetch\v1\Controllers', 'prefix' => 'v1'], function()
 {
-    Route::controller('/auth', 'AuthController');
+    Route::controller('auth', 'AuthController');
 
+    Route::get('test', function(){
+       return Response::make('Chod Whomper'); 
+    });
 //    Route::group(['before' => 'authenticate'], function()
 //    {
 //
