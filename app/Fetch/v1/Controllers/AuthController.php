@@ -9,27 +9,37 @@ use \Input, \Sms, \App;
 class AuthController extends APIController {
 
     protected $validator;
+    protected $user;
+    protected $verifyPhone;
     protected $expiration = 600; //ten minutes
     protected $tries = 4;
 
-    public function __construct(Validator $validator)
+    public function __construct(Validator $validator, User $user, VerifyPhone $verifyPhone)
     {
         $this->validator = $validator;
+        $this->user = $user;
+        $this->verifyPhone = $verifyPhone;
     }
 
     /**
      * @return mixed
      */
     public function postSetNumber(){
-        $number = Input::get('phone');
-        $countryCode = Input::get('country_code');
+        $data = [
+            'phone'       => Input::get('phone'),
+            'country_code' => Input::get('country_code'),
+        ];
 
-        if( ! $this->validator->authStore(Input::all()) )
+        if( ! $this->validator->authStore($data) )
         {
             return $this->respondMissingParameters($this->validator->errors());
         }
 
-        $this->addNumberToVerify($number, $countryCode);
+        $pin = $this->createVerifyKey();
+        $this->verifyPhone->addNumberToVerify($data['phone'], $data['country_code'], $pin, $this->expiration);
+
+        if( ! App::environment('testing'))
+            $this->smsVerifyCode($data['phone'], $pin);
 
         return $this->respondWithNoContent();
     }
@@ -38,23 +48,25 @@ class AuthController extends APIController {
      * @return mixed
      */
     public function postVerifyNumber(){
-        $number = Input::get('phone');
-        $code = Input::get('pin');
+        $data = [
+            'phone' => Input::get('phone'),
+            'pin'   => Input::get('pin'),
+        ];
 
-        if( ! $this->validator->authVerify(Input::all()) )
+        if( ! $this->validator->authVerify($data) )
         {
             return $this->respondMissingParameters($this->validator->errors());
         }
 
-        $verify = $this->verifyNumberWithCode($number, $code);
+        $verify = $this->verifyPhone->verifyNumberWithCode($data['phone'], $data['pin'], $this->tries);
         if( ! $verify )
         {
             return $this->respondWith400('Failed to validate number with code.');
         }
 
-        $this->expirePin($number);
+        $this->verifyPhone->expirePin($data['phone']);
 
-        $exists = $this->phoneExists($number);
+        $exists = $this->user->phoneExists($data['phone']);
         if($exists)
         {
             return $this->respondWithLoginObject($exists);
@@ -67,59 +79,29 @@ class AuthController extends APIController {
      * @return mixed
      */
     public function postCreateAccount(){
-        $token = Input::get('pin_token');
-        $number = Input::get('phone');
-        $username = Input::get('username');
-        $name = Input::get('name');
+        $data = [
+            'pin_token' => Input::get('pin_token'),
+            'phone'     => Input::get('phone'),
+            'username'  => Input::get('username'),
+            'name'      => Input::get('name'),
+        ];
 
-        if( ! $this->validator->authStoreUser(Input::all()) )
+        if( ! $this->validator->authStoreUser($data) )
         {
             return $this->respondMissingParameters($this->validator->errors());
         }
 
-        $check = $this->isNumberVerified($number, $token);
+        $check = $this->isNumberVerified($data['phone'], $data['pin_token']);
         if( ! $check ){
             return $this->respondWith400('Number has not been validated');
         }
 
-        $user = $this->createUserAccount($username, $name, $number, $check->country_code);
+        $user = $this->user->createUserAccount($data['username'], $data['name'], $data['phone'], $check->country_code);
 
-        $this->expirePin($number);
+        $this->verifyPhone->expirePin($data['phone']);
 
         return $this->respondWithLoginObject($user);
 
-    }
-
-    private function expirePin($number)
-    {
-        $expire = VerifyPhone::where('phone', '=', $number)->first();
-        $expire->expire = 0;
-        $expire->save();
-    }
-
-    private function addNumberToVerify($number, $countryCode){
-        $pin = $this->createVerifyKey();
-        $tempuser = VerifyPhone::where('phone', '=', $number)->first();;
-        if($tempuser)
-        {
-            $tempuser->verify = $pin;
-            $tempuser->expire = time() + $this->expiration;
-            $tempuser->tries = 0;
-            $tempuser->token = NULL;
-            $tempuser->save();
-        }
-        else
-        {
-            $tempuser = new VerifyPhone;
-            $tempuser->phone = $number;
-            $tempuser->verify = $pin;
-            $tempuser->expire = time() + $this->expiration;
-            $tempuser->tries = 0;
-            $tempuser->country_code = $countryCode;
-            $tempuser->save();
-        }
-        if( ! App::environment('testing'))
-            $this->smsVerifyCode($number, $pin);
     }
 
     private function smsVerifyCode($number, $pin){
@@ -130,29 +112,6 @@ class AuthController extends APIController {
         ]);
     }
 
-    private function verifyNumberWithCode($number, $code){
-        $instance =  VerifyPhone::where('phone', '=', $number)->where('expire', '>', time())->first();
-        if( ! $instance )
-        {
-            return FALSE;
-        }
-        if($instance->verify != $code || $instance->tries > $this->tries)
-        {
-            $instance->tries++;
-            $instance->save();
-            return FALSE;
-        }
-        $instance->token = sha1(uniqid('h493h4tD42jfsw', TRUE));
-        $instance->tries++;
-        $instance->save();
-        return $instance->token;
-    }
-
-    private function phoneExists($number)
-    {
-        return User::where('phone', '=', $number)->first() ?: FALSE;
-    }
-
     private function isNumberVerified($number, $token){
         $instance = VerifyPhone::where('phone', '=', $number)->where('token', '=', $token)->where('expire', '>', time())->first();
         if( ! $instance)
@@ -160,19 +119,6 @@ class AuthController extends APIController {
             return FALSE;
         }
         return $instance;
-    }
-
-    private function createUserAccount($username, $name, $number, $country_code)
-    {
-        $user = new User;
-        $user->username = $username;
-        $user->name = $name;
-        $user->phone = $number;
-        $user->country_code = $country_code;
-        $user->phone_hash = sha1($number);
-        $user->token = sha1(uniqid('m39jSUHDh3asdj3', TRUE));
-        $user->save();
-        return $user;
     }
 
     private function createVerifyKey(){

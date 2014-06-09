@@ -1,6 +1,6 @@
 <?php namespace tests\v1;
 
-use \User, \VerifyPhone;
+use \Fetch\v1\Models\User, \Fetch\v1\Models\VerifyPhone;
 
 class AuthTest extends \TestCase {
 
