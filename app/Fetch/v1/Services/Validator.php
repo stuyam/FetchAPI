@@ -38,6 +38,17 @@ class Validator {
         return $this->validate($input, $rules);
     }
 
+    public function drawingCreateDrawing($input)
+    {
+        $rules = [
+            'to_userid' => 'required',
+            'from_userid'     => 'required',
+            'drawing'    => 'required',
+        ];
+
+        return $this->validate($input, $rules);
+    }
+
     private function validate($input, $rules)
     {
         $validator = V::make($input, $rules);
