@@ -4,7 +4,7 @@ use \Fetch\v1\Services\Validator;
 use \Input, \Response, \VerifyPhone, \User, \Sms;
 
 
-class AuthController extends \BaseController {
+class AuthController extends APIController {
 
     protected $validator;
     protected $expiration = 600; //ten minutes
@@ -15,51 +15,55 @@ class AuthController extends \BaseController {
         $this->validator = $validator;
     }
 
-	public function postSetNumber(){
+    /**
+     * @return mixed
+     */
+    public function postSetNumber(){
         $number = Input::get('phone');
         $countryCode = Input::get('country_code');
 
         if( ! $this->validator->authStore(Input::all()) )
         {
-            return Response::json($this->validator->errors(), 400);
+            return $this->respondMissingParameters($this->validator->errors());
         }
 
         $this->addNumberToVerify($number, $countryCode);
 
-        return Response::json(NULL, 204);
+        return $this->respondWithNoContent();
     }
 
+    /**
+     * @return mixed
+     */
     public function postVerifyNumber(){
         $number = Input::get('phone');
         $code = Input::get('pin');
 
         if( ! $this->validator->authVerify(Input::all()) )
         {
-            return Response::json($this->validator->errors());
+            return $this->respondMissingParameters($this->validator->errors());
         }
 
         $verify = $this->verifyNumberWithCode($number, $code);
         if( ! $verify )
         {
-            return Response::json('failed to validate number with code', 400);
+            return $this->respondWith400('Failed to validate number with code.');
         }
+
+        $this->expirePin($number);
 
         $exists = $this->phoneExists($number);
         if($exists)
         {
-            return Response::json([
-                'userid' => $exists->userid,
-                'token' => $exists->token,
-                'name' => $exists->name,
-                'username' => $exists->username,
-                'country_code' => $exists->country_code,
-                'phone' => $exists->phone,
-            ]);
+            return $this->respondWithLoginObject($exists);
         }
 
-        return Response::json(['pin_token'=>$verify]);
+        return $this->respond(['pin_token'=>$verify]);
     }
 
+    /**
+     * @return mixed
+     */
     public function postCreateAccount(){
         $token = Input::get('pin_token');
         $number = Input::get('phone');
@@ -68,25 +72,27 @@ class AuthController extends \BaseController {
 
         if( ! $this->validator->authStoreUser(Input::all()) )
         {
-            return Response::json($this->validator->errors());
+            return $this->respondMissingParameters($this->validator->errors());
         }
 
         $check = $this->isNumberVerified($number, $token);
         if( ! $check ){
-            return Response::json('Number has not been validated', 400);
+            return $this->respondWith400('Number has not been validated');
         }
 
         $user = $this->createUserAccount($username, $name, $number, $check->country_code);
 
-        return Response::json([
-            'userid' => $user->userid,
-            'token' => $user->token,
-            'name' => $user->name,
-            'username' => $user->username,
-            'country_code' => $user->country_code,
-            'phone' => $user->phone,
-        ]);
+        $this->expirePin($number);
 
+        return $this->respondWithLoginObject($user);
+
+    }
+
+    private function expirePin($number)
+    {
+        $expire = VerifyPhone::where('phone', '=', $number)->first();
+        $expire->expire = 0;
+        $expire->save();
     }
 
     private function addNumberToVerify($number, $countryCode){

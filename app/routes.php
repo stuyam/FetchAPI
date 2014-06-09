@@ -20,9 +20,6 @@ Route::group(['namespace' => 'Fetch\v1\Controllers', 'prefix' => 'v1'], function
 {
     Route::controller('auth', 'AuthController');
 
-    Route::get('test', function(){
-       return Response::make('Chod Whomper');
-    });
 //    Route::group(['before' => 'fetch_auth'], function()
 //    {
 //
@@ -33,5 +30,6 @@ Route::group(['namespace' => 'Fetch\v1\Controllers', 'prefix' => 'v1'], function
 /////////////// 404 ///////////////
 App::missing(function($exception)
 {
-    return Response::json(['404'=> 'Page Not Found'], 404);
+    $api = new \Fetch\v1\Controllers\APIController;
+    return $api->respondNotFound();
 });
