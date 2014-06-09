@@ -4,5 +4,5 @@ class VerifyPhone extends \Eloquent {
 
     protected $table = 'verify';
 
-	protected $fillable = [];
+	protected $fillable = ['phone', 'country_code', 'verify', 'expire', 'tries', 'token'];
 }

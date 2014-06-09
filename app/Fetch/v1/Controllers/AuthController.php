@@ -1,7 +1,7 @@
 <?php namespace Fetch\v1\Controllers;
 
 use \Fetch\v1\Services\Validator;
-use \Input, \Response, \VerifyPhone, \User, \Sms;
+use \Input, \Response, \VerifyPhone, \User, \Sms, \App;
 
 
 class AuthController extends APIController {
@@ -116,7 +116,8 @@ class AuthController extends APIController {
             $tempuser->country_code = $countryCode;
             $tempuser->save();
         }
-        $this->smsVerifyCode($number, $pin);
+        if( ! App::environment('testing'))
+            $this->smsVerifyCode($number, $pin);
     }
 
     private function smsVerifyCode($number, $pin){
