@@ -1,4 +1,4 @@
-<?php
+<?php namespace Fetch\v1\Models;
 
 class VerifyPhone extends \Eloquent {
 

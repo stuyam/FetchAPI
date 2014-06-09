@@ -8,7 +8,7 @@ class Drawing extends \Eloquent {
     {
         $drawing = new Drawing;
         $drawing->to_phone_hash = $data['to_phone_hash'];
-        $drawing->from_userid = $data['from_userid'];
+        $drawing->userid = $data['userid'];
         $drawing->drawing = $data['drawing'];
         $drawing->read = 0;
         $drawing->save();

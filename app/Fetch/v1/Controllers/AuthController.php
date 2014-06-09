@@ -1,7 +1,9 @@
 <?php namespace Fetch\v1\Controllers;
 
 use \Fetch\v1\Services\Validator;
-use \Input, \Response, \VerifyPhone, \User, \Sms, \App;
+use \Fetch\v1\Models\User;
+use \Fetch\v1\Models\VerifyPhone;
+use \Input, \Sms, \App;
 
 
 class AuthController extends APIController {

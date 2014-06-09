@@ -1,18 +1,21 @@
 <?php namespace Fetch\v1\Controllers;
 
 use Fetch\v1\Services\Validator;
+use Fetch\v1\Models\Drawing;
 use Illuminate\Support\Facades\Input;
 
 class DrawingController extends APIController {
 
     protected $validator;
+    protected $drawing;
 
-	public function __construct(Validator $validator)
+	public function __construct(Validator $validator, Drawing $drawing)
     {
         $this->validator = $validator;
+        $this->drawing = $drawing;
     }
 
-    public function postCreateDrawing()
+    public function postCreate()
     {
         $data = [
             'userid' =>Input::get('userid'),
@@ -25,8 +28,9 @@ class DrawingController extends APIController {
             return $this->respondMissingParameters($this->validator->errors());
         }
 
-        Drawing::createDrawing($data);
+        $this->drawing->createDrawing($data);
 
+        return 'testsd';
     }
 
 }
