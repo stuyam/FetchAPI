@@ -14,14 +14,19 @@ class DrawingController extends APIController {
 
     public function postCreateDrawing()
     {
-        $from_userid = Input::get('from_userid');
-        $to_userid = Input::get('to_userid');
-        $drawing = Input::get('drawing');
+        $data = [
+            'userid' =>Input::get('userid'),
+            'to_phone_hash'   =>Input::get('to_phone_hash'),
+            'drawing'     =>Input::get('drawing'),
+        ];
 
-        if( ! $this->validator->drawingCreateDrawing(Input::all()) )
+        if( ! $this->validator->drawingCreateDrawing($data) )
         {
             return $this->respondMissingParameters($this->validator->errors());
         }
+
+        Drawing::createDrawing($data);
+
     }
 
 }

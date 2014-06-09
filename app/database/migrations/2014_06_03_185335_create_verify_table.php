@@ -15,12 +15,12 @@ class CreateVerifyTable extends Migration {
 		Schema::create('verify', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('phone')->unique();
-			$table->string('country_code');
-			$table->integer('verify');
+			$table->string('phone', 20)->unique();
+			$table->string('country_code', 10);
+			$table->smallInteger('verify');
             $table->integer('expire');
-            $table->integer('tries');
-			$table->string('token')->nullable();
+            $table->smallInteger('tries');
+			$table->string('token', 40)->nullable();
 			$table->timestamps();
 		});
 	}

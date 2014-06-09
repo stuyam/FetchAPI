@@ -17,10 +17,10 @@ class CreateUsersTable extends Migration {
 			$table->increments('id');
 			$table->string('username')->unique();
 			$table->string('name');
-			$table->string('phone')->unique();
-            $table->string('country_code');
-            $table->string('phone_hash')->unique();
-            $table->string('token')->unique();
+			$table->string('phone', 20)->unique();
+            $table->string('country_code', 10);
+            $table->string('phone_hash', 40)->unique();
+            $table->string('token', 40)->unique();
 			$table->timestamps();
 		});
 	}

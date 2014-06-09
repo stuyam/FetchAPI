@@ -41,8 +41,8 @@ class Validator {
     public function drawingCreateDrawing($input)
     {
         $rules = [
-            'to_userid' => 'required',
-            'from_userid'     => 'required',
+            'userid' => 'required',
+            'to_phone_hash'     => 'required',
             'drawing'    => 'required',
         ];
 

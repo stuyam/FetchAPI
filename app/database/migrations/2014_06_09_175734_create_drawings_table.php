@@ -15,8 +15,8 @@ class CreateDrawingsTable extends Migration {
 		Schema::create('drawings', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('from_userid');
-			$table->integer('to_userid');
+			$table->integer('userid');
+			$table->string('to_phone_hash', 40);
 			$table->text('drawing');
 			$table->boolean('read');
 			$table->timestamps();
