@@ -41,9 +41,19 @@ class Validator {
     public function drawingCreateDrawing($input)
     {
         $rules = [
-            'userid' => 'required',
-            'to_phone_hash'     => 'required',
-            'drawing'    => 'required',
+            'userid'        => 'required',
+            'to_phone_hash' => 'required',
+            'drawing'       => 'required',
+        ];
+
+        return $this->validate($input, $rules);
+    }
+
+    public function drawingMissingPhones($input)
+    {
+        $rules = [
+            'userid'         => 'required',
+            'missing_phones' => 'required',
         ];
 
         return $this->validate($input, $rules);

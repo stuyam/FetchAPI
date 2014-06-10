@@ -2,7 +2,8 @@
 
 use Fetch\v1\Services\Validator;
 use Fetch\v1\Models\Drawing;
-use Illuminate\Support\Facades\Input;
+use Fetch\v1\Models\User;
+use \Input, \App, \Sms;
 
 class DrawingController extends APIController {
 
@@ -18,9 +19,9 @@ class DrawingController extends APIController {
     public function postCreate()
     {
         $data = [
-            'userid' =>Input::get('userid'),
-            'to_phone_hash'   =>Input::get('to_phone_hash'),
-            'drawing'     =>Input::get('drawing'),
+            'userid'        => Input::get('userid'),
+            'to_phone_hash' => Input::get('to_phone_hash'),
+            'drawing'       => Input::get('drawing'),
         ];
 
         if( ! $this->validator->drawingCreateDrawing($data) )
@@ -31,6 +32,34 @@ class DrawingController extends APIController {
         $this->drawing->createDrawing($data);
 
         return 'testsd';
+    }
+
+    public function postMissingPhones()
+    {
+        $data = [
+            'userid'         => Input::get('userid'),
+            'missing_phones' => Input::get('missing_phones'),
+        ];
+
+        if( ! $this->validator->drawingMissingPhones($data) )
+        {
+            return $this->respondMissingParameters($this->validator->errors());
+        }
+
+        $name = User::findOrFail($data['userid']);
+        $name = ['name' => $name->name];
+
+        if( ! App::environment('testing'))
+        {
+            array_map(function($n, $data)
+            {
+                Sms::send([
+                    'to'   => $n['phone'],
+                    'text' =>
+                        "Hi $n[name], $data[name] sent you a drawing on Fetch! Download it here to view what they sent you: http://bit.ly/GetFetch"
+                ]);
+            }, json_decode($data['missing_phones'], true), $name);
+        }
     }
 
 }
