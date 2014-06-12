@@ -64,11 +64,10 @@ class AuthController extends APIController {
             return $this->respondWith400('Failed to validate number with code.');
         }
 
-        $this->verifyPhone->expirePin($data['phone']);
-
         $exists = $this->user->phoneExists($data['phone']);
         if($exists)
         {
+            $this->verifyPhone->expirePin($data['phone']);
             return $this->respondWithLoginObject($exists);
         }
 
