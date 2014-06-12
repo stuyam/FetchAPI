@@ -6,7 +6,7 @@ class Drawing extends \Eloquent {
 
 	protected $fillable = ['userid', 'to_phone_hash', 'drawing', 'read'];
 
-    public function createDrawing($data)
+    public function createDrawingReturnMissingHashes($data)
     {
         $missing = FALSE;
         for($i = 0; $i < count($data['to_phone_hash']); $i++)

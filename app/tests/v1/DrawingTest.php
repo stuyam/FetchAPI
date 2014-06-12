@@ -18,16 +18,16 @@ class DrawingTest extends \TestCase {
         $this->assertResponseStatus(200);
     }
 
-        /**
-         * Test that the method returns with a failure
-         *
-         * @return void
-         */
-        public function testDrawingCreateMissingParameters()
-        {
-            $this->call('POST', $this->prefix.'create', ['userid'=>'1']);
+    /**
+     * Test that the method returns with a failure
+     *
+     * @return void
+     */
+    public function testDrawingCreateMissingParameters()
+    {
+        $this->call('POST', $this->prefix.'create', ['userid'=>'1']);
 
-            $this->assertResponseStatus(460);
-        }
+        $this->assertResponseStatus(460);
+    }
 
 }

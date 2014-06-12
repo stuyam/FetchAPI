@@ -29,9 +29,7 @@ class DrawingController extends APIController {
             return $this->respondMissingParameters($this->validator->errors());
         }
 
-        $this->drawing->createDrawing($data);
-
-        return 'testsd';
+        return $this->respond($this->drawing->createDrawingReturnMissingHashes($data));
     }
 
     public function postMissingPhones()
@@ -60,6 +58,8 @@ class DrawingController extends APIController {
                 ]);
             }, json_decode($data['missing_phones'], true), $name);
         }
+
+        return $this->respondWithNoContent();
     }
 
 }
