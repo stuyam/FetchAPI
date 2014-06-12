@@ -22,7 +22,9 @@ Route::group(['namespace' => 'Fetch\v1\Controllers', 'prefix' => 'v1'], function
 
     Route::group(['before' => 'fetch_auth'], function()
     {
-
+        Route::post('test', function(){
+           return 'this is a test and has been filtered';
+        });
     });
     Route::controller('drawing', 'DrawingController');
 
