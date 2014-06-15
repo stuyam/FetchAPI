@@ -20,17 +20,10 @@ Route::group(['namespace' => 'Fetch\v1\Controllers', 'prefix' => 'v1'], function
 {
     Route::controller('auth', 'AuthController');
 
-    if( ! App::environment('testing'))
-    {
-        Route::group(['before' => 'fetch_auth'], function ()
-        {
-            Route::controller('drawing', 'DrawingController');
-        });
-    }
-    else
+    Route::group(['before' => 'fetch_auth'], function ()
     {
         Route::controller('drawing', 'DrawingController');
-    }
+    });
 
 });
 

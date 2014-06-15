@@ -70,15 +70,5 @@ class AuthTest extends \TestCase {
         $this->call('POST', $this->prefix.'verify-number', ['phone'=>'+15083142814', 'pin'=>'2255']);
 
         $this->assertResponseStatus(200);
-//        $json = json_encode([
-//            'userid'=>1,
-//            'token'=>sha1('test'),
-//            'name'=>'Stuart Yamartino',
-//            'username'=>'stuart',
-//            'country_code'=>'+1',
-//            'phone1'=>'+15083142814'
-//        ]);
-        //dd($json);
-        //$this->assertJsonStringEqualsJsonString('{"userid":1,"token":"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3","name":"Stuart Yamartino","username":"stuart","country_code":"+1","phone1":"+15083142814"}');
     }
 }

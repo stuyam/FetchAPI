@@ -47,7 +47,9 @@ class DrawingController extends APIController {
             return $this->respondMissingParameters($this->validator->errors());
         }
 
-        return $this->respond($this->linkable->createLinkableDrawing($data));
+        $this->linkable->createLinkableDrawing($data);
+
+        return $this->respondWithNoContent();
     }
 
     public function postMissingPhones()

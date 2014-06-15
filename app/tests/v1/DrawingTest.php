@@ -13,7 +13,7 @@ class DrawingTest extends \TestCase {
      */
     public function testDrawingCreate()
     {
-        $this->call('POST', $this->prefix.'create', ['userid'=>'1', 'to_phone_hash'=>sha1('foo'), 'drawing'=> 'blaaaalbaaalbaaaa']);
+        $response = $this->call('POST', $this->prefix.'create', ['userid'=>'1', 'to_phone_hash'=> '["1234","5678","9101112"]', 'drawing'=> 'blaaaalbaaalbaaaa']);
 
         $this->assertResponseStatus(200);
     }
@@ -61,9 +61,7 @@ class DrawingTest extends \TestCase {
 
         $response = $this->call('POST', $this->prefix.'create-linkable', ['userid'=>'1', 'drawing'=> 'blaaalblaaatest']);
 
-        $this->assertResponseStatus(200);
-
-        $this->assertTrue($this->isJson($response->getContent()));
+        $this->assertResponseStatus(204);
     }
 
 }

@@ -9,18 +9,19 @@ class Drawing extends \Eloquent {
     public function createDrawingReturnMissingHashes($data)
     {
         $missing = FALSE;
-        for($i = 0; $i < count($data['to_phone_hash']); $i++)
+        $hashArray = json_decode($data['to_phone_hash']);
+        foreach($hashArray as $hash)
         {
             $drawing = new Drawing;
-            $drawing->to_phone_hash = $data['to_phone_hash'][$i];
+            $drawing->to_phone_hash = $hash;
             $drawing->userid = $data['userid'];
             $drawing->drawing = $data['drawing'];
             $drawing->read = 0;
             $drawing->save();
 
-            if( ! User::where('phone_hash', '=', $data['to_phone_hash'][$i])->first())
+            if( ! User::where('phone_hash', '=', $hash)->first())
             {
-                $missing[] = $data['to_phone_hash'][$i];
+                $missing[] = $hash;
             }
         }
         return $missing;
