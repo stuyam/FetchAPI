@@ -25,4 +25,5 @@ class Drawing extends \Eloquent {
         }
         return $missing;
     }
+
 }

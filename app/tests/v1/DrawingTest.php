@@ -51,4 +51,19 @@ class DrawingTest extends \TestCase {
         $this->assertResponseStatus(204);
     }
 
+    /**
+     * Test that the method returns with a success
+     *
+     * @return void
+     */
+    public function testDrawingLinkable()
+    {
+
+        $response = $this->call('POST', $this->prefix.'create-linkable', ['userid'=>'1', 'drawing'=> 'blaaalblaaatest']);
+
+        $this->assertResponseStatus(200);
+
+        $this->assertTrue($this->isJson($response->getContent()));
+    }
+
 }

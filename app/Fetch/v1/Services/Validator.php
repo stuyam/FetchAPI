@@ -49,6 +49,16 @@ class Validator {
         return $this->validate($input, $rules);
     }
 
+    public function drawingCreateLinkable($input)
+    {
+        $rules = [
+            'userid'        => 'required',
+            'drawing'       => 'required',
+        ];
+
+        return $this->validate($input, $rules);
+    }
+
     public function drawingMissingPhones($input)
     {
         $rules = [

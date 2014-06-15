@@ -3,17 +3,20 @@
 use Fetch\v1\Services\Validator;
 use Fetch\v1\Models\Drawing;
 use Fetch\v1\Models\User;
+use Fetch\v1\Models\Linkable;
 use \Input, \App, \Sms;
 
 class DrawingController extends APIController {
 
     protected $validator;
     protected $drawing;
+    protected $linkable;
 
-	public function __construct(Validator $validator, Drawing $drawing)
+	public function __construct(Validator $validator, Drawing $drawing, Linkable $linkable)
     {
         $this->validator = $validator;
         $this->drawing = $drawing;
+        $this->linkable = $linkable;
     }
 
     public function postCreate()
@@ -30,6 +33,21 @@ class DrawingController extends APIController {
         }
 
         return $this->respond($this->drawing->createDrawingReturnMissingHashes($data));
+    }
+
+    public function postCreateLinkable()
+    {
+        $data = [
+            'userid'        => Input::get('userid'),
+            'drawing'       => Input::get('drawing'),
+        ];
+
+        if( ! $this->validator->drawingCreateLinkable($data) )
+        {
+            return $this->respondMissingParameters($this->validator->errors());
+        }
+
+        return $this->respond($this->linkable->createLinkableDrawing($data));
     }
 
     public function postMissingPhones()
