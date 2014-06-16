@@ -61,7 +61,7 @@ class DrawingTest extends \TestCase {
 
         $response = $this->call('POST', $this->prefix.'create-linkable', ['userid'=>'1', 'drawing'=> 'blaaalblaaatest']);
 
-        $this->assertResponseStatus(204);
+        $this->assertResponseStatus(200);
     }
 
 }

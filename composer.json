@@ -5,7 +5,8 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.2.*",
-        "twilio/laratwilio": "dev-master"
+        "twilio/laratwilio": "dev-master",
+        "vinkla/base62": "dev-master"
 	},
     "require-dev": {
         "way/generators": "2.*",

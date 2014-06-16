@@ -14,6 +14,7 @@ class Linkable extends \Eloquent {
         $drawing->userid = $data['userid'];
         $drawing->drawing = $data['drawing'];
         $drawing->save();
+        return $drawing->id;
     }
 
 }

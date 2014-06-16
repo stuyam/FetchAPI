@@ -4,7 +4,7 @@ use Fetch\v1\Services\Validator;
 use Fetch\v1\Models\Drawing;
 use Fetch\v1\Models\User;
 use Fetch\v1\Models\Linkable;
-use \Input, \App, \Sms;
+use \Input, \App, \Sms, \Base62;
 
 class DrawingController extends APIController {
 
@@ -47,9 +47,9 @@ class DrawingController extends APIController {
             return $this->respondMissingParameters($this->validator->errors());
         }
 
-        $this->linkable->createLinkableDrawing($data);
-
-        return $this->respondWithNoContent();
+        $id = $this->linkable->createLinkableDrawing($data);
+        $string = Base62::encode($id);
+        return $this->respond($string);
     }
 
     public function postMissingPhones()

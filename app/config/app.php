@@ -121,6 +121,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
         'Way\Generators\GeneratorsServiceProvider',
         'Twilio\Laratwilio\LaratwilioServiceProvider',
+        'Vinkla\Base62\Base62ServiceProvider',
 
 	),
 
@@ -187,7 +188,8 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
-        'Sms' => 'Twilio\Laratwilio\Facades\Laratwilio',
+        'Sms'             => 'Twilio\Laratwilio\Facades\Laratwilio',
+        'Base62'          => 'Vinkla\Base62\Facades\Base62',
 
 	),
 
