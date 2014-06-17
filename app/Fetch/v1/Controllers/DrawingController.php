@@ -82,7 +82,7 @@ class DrawingController extends APIController {
                     'text' =>
                         "Hi $n[name], $data[name] sent you a drawing on Fetch! Download it here to view what they sent you: http://bit.ly/GetFetch"
                 ]);
-            }, json_decode($data['missing_phones'], true), $name);
+            }, $data['missing_phones'], $name);
         }
 
         return $this->respondWithNoContent();

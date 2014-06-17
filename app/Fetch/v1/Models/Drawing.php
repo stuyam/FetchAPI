@@ -9,7 +9,7 @@ class Drawing extends \Eloquent {
     public function createDrawingReturnMissingHashes($data)
     {
         $missing = FALSE;
-        $hashArray = json_decode($data['to_phone_hash']);
+        $hashArray = $data['to_phone_hash'];
         foreach($hashArray as $hash)
         {
             $drawing = new Drawing;
