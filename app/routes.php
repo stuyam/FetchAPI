@@ -20,10 +20,11 @@ Route::group(['namespace' => 'Fetch\v1\Controllers', 'prefix' => 'v1'], function
 {
     Route::controller('auth', 'AuthController');
 
-    Route::group(['before' => 'fetch_auth'], function ()
-    {
+//    Route::group(['before' => 'fetch_auth'], function ()
+//    {
+//
+//    });
 
-    });
     Route::controller('drawing', 'DrawingController');
     Route::controller('inbox', 'InboxController');
 

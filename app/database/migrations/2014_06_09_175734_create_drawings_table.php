@@ -16,7 +16,7 @@ class CreateDrawingsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('userid');
-			$table->string('to_phone_hash', 40);
+			$table->string('to_phone_hash', 40)->index();
 			$table->text('drawing');
 			$table->boolean('read');
 			$table->timestamps();
