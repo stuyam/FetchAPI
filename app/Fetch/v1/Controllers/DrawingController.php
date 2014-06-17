@@ -32,7 +32,13 @@ class DrawingController extends APIController {
             return $this->respondMissingParameters($this->validator->errors());
         }
 
-        return $this->respond($this->drawing->createDrawingReturnMissingHashes($data));
+        $response = $this->drawing->createDrawingReturnMissingHashes($data);
+
+        if(count($response) > 0)
+        {
+            return $this->respondNeedsMoreData($response);
+        }
+        return $this->respondWithNoContent();
     }
 
     public function postCreateLinkable()

@@ -26,9 +26,14 @@ class APIController extends \BaseController {
 
     //------------------------ 200 ----------------------//
 
-    public function respondWithNoContent($message = NULL)
+    public function respondWithNoContent()
     {
-        return $this->setStatusCode(204)->respondWithError($message);
+        return $this->setStatusCode(204)->respond();
+    }
+
+    public function respondNeedsMoreData($data)
+    {
+        return $this->setStatusCode(260)->respond($data);
     }
 
     //-------------------- 200 Objects ------------------//
@@ -64,7 +69,7 @@ class APIController extends \BaseController {
 
     //------------------- General Responses ---------------//
 
-    public function respond($data, $headers = [])
+    public function respond($data = NULL, $headers = [])
     {
         return Response::json($data, $this->getStatusCode(), $headers);
     }

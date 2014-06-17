@@ -15,7 +15,7 @@ class DrawingTest extends \TestCase {
     {
         $response = $this->call('POST', $this->prefix.'create', ['userid'=>'1', 'to_phone_hash'=> '["1234","5678","9101112"]', 'drawing'=> 'blaaaalbaaalbaaaa']);
 
-        $this->assertResponseStatus(200);
+        $this->assertResponseStatus(260);
     }
 
     /**
