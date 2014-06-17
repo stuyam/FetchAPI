@@ -70,19 +70,20 @@ class DrawingController extends APIController {
             return $this->respondMissingParameters($this->validator->errors());
         }
 
-        $name = User::findOrFail($data['userid']);
-        $name = ['name' => $name->name];
+        $name = User::find($data['userid']);
+        $fromName = $name->name;
 
         if( ! App::environment('testing'))
         {
-            array_map(function($n, $data)
+            array_map(function($n) use ($fromName)
             {
+                $toName = strtok($n['name'], " ");
                 Sms::send([
                     'to'   => $n['phone'],
                     'text' =>
-                        "Hi $n[name], $data[name] sent you a drawing on Fetch! Download it here to view what they sent you: http://bit.ly/GetFetch"
+                        "Hi $toName, $fromName sent you a drawing on Fetch! Download it here to view what they sent you: http://bit.ly/GetFetch"
                 ]);
-            }, $data['missing_phones'], $name);
+            }, $data['missing_phones']);
         }
 
         return $this->respondWithNoContent();
