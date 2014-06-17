@@ -34,7 +34,7 @@ class DrawingController extends APIController {
 
         $response = $this->drawing->createDrawingReturnMissingHashes($data);
 
-        if(count($response) > 0)
+        if($response)
         {
             return $this->respondNeedsMoreData($response);
         }
