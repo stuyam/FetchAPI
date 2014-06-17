@@ -27,4 +27,12 @@ class Drawing extends \Eloquent {
         return $missing;
     }
 
+    public function getIndex($data)
+    {
+        return User::rightJoin('drawings', 'users.phone_hash', '=', 'drawings.phone_hash')
+                       ->where('users.id', '=', $data['userid'])
+                       ->orderBy('drawings.created_at', 'desc')
+                       ->select('users.username', 'drawings.drawing', 'drawings.created_at')
+                       ->get();
+    }
 }

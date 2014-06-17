@@ -69,6 +69,15 @@ class Validator {
         return $this->validate($input, $rules);
     }
 
+    public function inboxIndex($input)
+    {
+        $rules = [
+            'userid'         => 'required',
+        ];
+
+        return $this->validate($input, $rules);
+    }
+
     private function validate($input, $rules)
     {
         $validator = V::make($input, $rules);
