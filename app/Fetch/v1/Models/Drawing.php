@@ -4,7 +4,12 @@ use Fetch\v1\Models\User;
 
 class Drawing extends \Eloquent {
 
-	protected $fillable = ['userid', 'to_phone_hash', 'drawing', 'read'];
+	protected $fillable = ['user_id', 'to_phone_hash', 'drawing', 'width', 'height', 'line_color', 'bg_color', 'version', 'read'];
+
+    protected function getDateFormat()
+    {
+        return 'U';
+    }
 
     public function createDrawingReturnMissingHashes($data)
     {
@@ -14,9 +19,14 @@ class Drawing extends \Eloquent {
         {
             $drawing = new Drawing;
             $drawing->to_phone_hash = $hash;
-            $drawing->userid = $data['userid'];
-            $drawing->drawing = $data['drawing'];
-            $drawing->read = 0;
+            $drawing->user_id       = $data['userid'];
+            $drawing->drawing       = $data['drawing'];
+            $drawing->width         = $data['width'];
+            $drawing->height        = $data['height'];
+            $drawing->line_color    = $data['line_color'];
+            $drawing->bg_color      = $data['bg_color'];
+            $drawing->version       = $data['version'];
+            $drawing->read          = 0;
             $drawing->save();
 
             if( ! User::where('phone_hash', '=', $hash)->first())

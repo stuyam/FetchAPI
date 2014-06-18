@@ -15,9 +15,14 @@ class CreateDrawingsTable extends Migration {
 		Schema::create('drawings', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('userid');
+			$table->integer('user_id');
 			$table->string('to_phone_hash', 40)->index();
 			$table->text('drawing');
+            $table->integer('width');
+            $table->integer('height');
+            $table->string('bg_color', 10);
+            $table->string('line_color', 10);
+            $table->tinyInteger('version');
 			$table->boolean('read');
 			$table->timestamps();
 		});

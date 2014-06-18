@@ -44,6 +44,10 @@ class Validator {
             'userid'        => 'required',
             'to_phone_hash' => 'required',
             'drawing'       => 'required',
+            'width'         => 'required',
+            'height'        => 'required',
+            'line_color'    => 'required',
+            'bg_color'      => 'required',
         ];
 
         return $this->validate($input, $rules);

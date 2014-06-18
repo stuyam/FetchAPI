@@ -25,6 +25,11 @@ class DrawingController extends APIController {
             'userid'        => Input::get('userid'),
             'to_phone_hash' => Input::get('to_phone_hash'),
             'drawing'       => Input::get('drawing'),
+            'width'         => Input::get('width'),
+            'height'        => Input::get('height'),
+            'line_color'    => Input::get('line_color'),
+            'bg_color'      => Input::get('bg_color'),
+            'version'       => Input::get('version'),
         ];
 
         if( ! $this->validator->drawingCreateDrawing($data) )
