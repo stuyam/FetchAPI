@@ -18,7 +18,7 @@ class InboxController extends APIController {
 	/**
 	 * @return Response
 	 */
-	public function post()
+	public function postGet()
 	{
         $data = [
             'userid' => Input::get('userid'),
@@ -29,7 +29,7 @@ class InboxController extends APIController {
             return $this->respondMissingParameters($this->validator->errors());
         }
 
-        return $this->respond($this->drawing->getInbox($data));
+        //return $this->respond($this->drawing->getInbox($data));
 	}
 
 }

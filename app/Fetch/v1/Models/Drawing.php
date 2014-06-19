@@ -18,13 +18,13 @@ class Drawing extends \Eloquent {
         foreach($hashArray as $hash)
         {
             $drawing = new Drawing;
-            $drawing->to_phone_hash = $hash;
             $drawing->user_id       = $data['userid'];
-            $drawing->drawing       = $data['drawing'];
+            $drawing->to_phone_hash = $hash;
+            $drawing->drawing       = json_encode($data['drawing']);
             $drawing->width         = $data['width'];
             $drawing->height        = $data['height'];
-            $drawing->line_color    = $data['line_color'];
             $drawing->bg_color      = $data['bg_color'];
+            $drawing->line_color    = $data['line_color'];
             $drawing->version       = $data['version'];
             $drawing->read          = 0;
             $drawing->save();
@@ -42,7 +42,17 @@ class Drawing extends \Eloquent {
         return User::rightJoin('drawings', 'users.phone_hash', '=', 'drawings.phone_hash')
                        ->where('users.id', '=', $data['userid'])
                        ->orderBy('drawings.created_at', 'desc')
-                       ->select('users.username', 'drawings.drawing', 'drawings.created_at')
+                       ->select(
+                            'users.username',
+                            'users.name',
+                            'drawings.id',
+                            'drawings.width',
+                            'drawings.height',
+                            'drawings.line_color',
+                            'drawings.bg_color',
+                            'drawings.drawing',
+                            'drawings.version',
+                            'drawings.created_at')
                        ->get();
     }
 }
