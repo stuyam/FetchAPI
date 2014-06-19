@@ -17,7 +17,7 @@ class CreateLinkableDrawingsTable extends Migration {
 			$table->increments('id');
 			$table->integer('userid');
 			$table->text('drawing');
-			$table->timestamps();
+			$table->integer('timestamp');
 		});
 	}
 

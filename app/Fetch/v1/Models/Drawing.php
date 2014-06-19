@@ -4,12 +4,7 @@ use Fetch\v1\Models\User;
 
 class Drawing extends \Eloquent {
 
-	protected $fillable = ['user_id', 'to_phone_hash', 'drawing', 'width', 'height', 'line_color', 'bg_color', 'version', 'read'];
-
-    protected function getDateFormat()
-    {
-        return 'U';
-    }
+	protected $fillable = ['user_id', 'to_phone_hash', 'drawing', 'width', 'height', 'line_color', 'bg_color', 'version', 'timestamp', 'read'];
 
     public function createDrawingReturnMissingHashes($data)
     {
@@ -27,6 +22,7 @@ class Drawing extends \Eloquent {
             $drawing->line_color    = $data['line_color'];
             $drawing->version       = $data['version'];
             $drawing->read          = 0;
+            $drawing->timestamp     = time();
             $drawing->save();
 
             if( ! User::where('phone_hash', '=', $hash)->first())
@@ -37,9 +33,9 @@ class Drawing extends \Eloquent {
         return $missing;
     }
 
-    public function getIndex($data)
+    public function getInbox($data)
     {
-        return User::rightJoin('drawings', 'users.phone_hash', '=', 'drawings.phone_hash')
+        return User::rightJoin('drawings', 'users.phone_hash', '=', 'drawings.to_phone_hash')
                        ->where('users.id', '=', $data['userid'])
                        ->orderBy('drawings.created_at', 'desc')
                        ->select(
@@ -52,7 +48,7 @@ class Drawing extends \Eloquent {
                             'drawings.bg_color',
                             'drawings.drawing',
                             'drawings.version',
-                            'drawings.created_at')
+                            'drawings.timestamp')
                        ->get();
     }
 }

@@ -24,7 +24,7 @@ class CreateDrawingsTable extends Migration {
             $table->string('line_color', 10);
             $table->tinyInteger('version');
 			$table->boolean('read');
-			$table->timestamps();
+			$table->integer('timestamp');
 		});
 	}
 

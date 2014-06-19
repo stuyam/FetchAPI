@@ -28,8 +28,44 @@ class InboxController extends APIController {
         {
             return $this->respondMissingParameters($this->validator->errors());
         }
+        $raw = $this->drawing->getInbox($data);
 
-        return $this->respond($this->drawing->getInbox($data));
+        foreach($raw as $n)
+        {
+            if (in_array($n['username'], $inboxMap))
+            {
+                $newData[array_search($n['username'], $inboxMap)]['pages'][] = [
+                    'drawing_id' => $n['id'],
+                    'width'      => $n['width'],
+                    'height'     => $n['height'],
+                    'line_color' => $n['line_color'],
+                    'bg_color'   => $n['bg_color'],
+                    'pages'      => $n['drawing'],
+                    'version'    => $n['version'],
+                    'timestamp'  => $n['timestamp'],
+                ];
+            }
+            else
+            {
+                $newData[] = [
+                    'username' => $n['username'],
+                    'name'     => $n['name'],
+                    'pages'  => [[
+                        'drawing_id' => $n['id'],
+                        'width'      => $n['width'],
+                        'height'     => $n['height'],
+                        'line_color' => $n['line_color'],
+                        'bg_color'   => $n['bg_color'],
+                        'pages'      => $n['drawing'],
+                        'version'    => $n['version'],
+                        'timestamp'  => $n['timestamp'],
+                    ]],
+                ];
+                $inboxMap[] = $n['username'];
+            }
+        }
+
+        return $this->respond($newData);
 	}
 
 }
