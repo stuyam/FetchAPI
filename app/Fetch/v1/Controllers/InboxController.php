@@ -34,7 +34,7 @@ class InboxController extends APIController {
         {
             if (in_array($n['username'], $inboxMap))
             {
-                $newData[array_search($n['username'], $inboxMap)]['pages'][] = [
+                $newData[array_search($n['username'], $inboxMap)]['drawings'][] = [
                     'drawing_id' => $n['id'],
                     'width'      => $n['width'],
                     'height'     => $n['height'],
@@ -50,7 +50,7 @@ class InboxController extends APIController {
                 $newData[] = [
                     'username' => $n['username'],
                     'name'     => $n['name'],
-                    'pages'  => [[
+                    'drawings'  => [[
                         'drawing_id' => $n['id'],
                         'width'      => $n['width'],
                         'height'     => $n['height'],
