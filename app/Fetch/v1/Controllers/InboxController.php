@@ -30,6 +30,9 @@ class InboxController extends APIController {
         }
         $raw = $this->drawing->getInbox($data);
 
+        $newData = [];
+        $inboxMap = [];
+
         foreach($raw as $n)
         {
             if (in_array($n['username'], $inboxMap))
@@ -50,16 +53,18 @@ class InboxController extends APIController {
                 $newData[] = [
                     'username' => $n['username'],
                     'name'     => $n['name'],
-                    'drawings'  => [[
-                        'drawing_id' => $n['id'],
-                        'width'      => $n['width'],
-                        'height'     => $n['height'],
-                        'line_color' => $n['line_color'],
-                        'bg_color'   => $n['bg_color'],
-                        'pages'      => $n['drawing'],
-                        'version'    => $n['version'],
-                        'timestamp'  => $n['timestamp'],
-                    ]],
+                    'drawings'  => [
+                        [
+                            'drawing_id' => $n['id'],
+                            'width'      => $n['width'],
+                            'height'     => $n['height'],
+                            'line_color' => $n['line_color'],
+                            'bg_color'   => $n['bg_color'],
+                            'pages'      => $n['drawing'],
+                            'version'    => $n['version'],
+                            'timestamp'  => $n['timestamp'],
+                        ]
+                    ],
                 ];
                 $inboxMap[] = $n['username'];
             }
