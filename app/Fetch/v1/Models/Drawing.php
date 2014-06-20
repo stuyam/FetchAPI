@@ -15,7 +15,7 @@ class Drawing extends \Eloquent {
             $drawing = new Drawing;
             $drawing->user_id       = $data['userid'];
             $drawing->to_phone_hash = $hash;
-            $drawing->drawing       = json_encode($data['drawing']);
+            $drawing->drawing       = json_encode($data['pages']);
             $drawing->width         = $data['width'];
             $drawing->height        = $data['height'];
             $drawing->bg_color      = $data['bg_color'];
