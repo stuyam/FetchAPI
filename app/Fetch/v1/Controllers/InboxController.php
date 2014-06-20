@@ -43,7 +43,7 @@ class InboxController extends APIController {
                     'height'     => $n['height'],
                     'line_color' => $n['line_color'],
                     'bg_color'   => $n['bg_color'],
-                    'pages'      => $n['drawing'],
+                    'pages'      => json_decode($n['drawing']),
                     'version'    => $n['version'],
                     'timestamp'  => $n['timestamp'],
                 ];
@@ -61,7 +61,7 @@ class InboxController extends APIController {
                             'height'     => $n['height'],
                             'line_color' => $n['line_color'],
                             'bg_color'   => $n['bg_color'],
-                            'pages'      => $n['drawing'],
+                            'pages'      => json_decode($n['drawing']),
                             'version'    => $n['version'],
                             'timestamp'  => $n['timestamp'],
                         ]
