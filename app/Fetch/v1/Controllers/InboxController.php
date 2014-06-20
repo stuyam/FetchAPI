@@ -51,8 +51,9 @@ class InboxController extends APIController {
             else
             {
                 $newData[] = [
-                    'username' => $n['username'],
-                    'name'     => $n['name'],
+                    'username'   => $n['username'],
+                    'name'       => $n['name'],
+                    'phone_hash' => $n['phone_hash'],
                     'drawings'  => [
                         [
                             'drawing_id' => $n['id'],

@@ -43,6 +43,7 @@ class Drawing extends \Eloquent {
                        ->select(
                             'users.username',
                             'users.name',
+                            'users.phone_hash',
                             'drawings.id',
                             'drawings.width',
                             'drawings.height',
