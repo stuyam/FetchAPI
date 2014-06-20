@@ -24,7 +24,7 @@ class DrawingController extends APIController {
         $data = [
             'userid'        => Input::get('userid'),
             'to_phone_hash' => Input::get('to_phone_hash'),
-            'drawing'       => Input::get('drawing'),
+            'pages'       => Input::get('pages'),
             'width'         => Input::get('width'),
             'height'        => Input::get('height'),
             'line_color'    => Input::get('line_color'),

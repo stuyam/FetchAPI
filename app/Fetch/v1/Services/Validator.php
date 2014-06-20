@@ -43,7 +43,7 @@ class Validator {
         $rules = [
             'userid'        => 'required',
             'to_phone_hash' => 'required',
-            'drawing'       => 'required',
+            'pages'       => 'required',
             'width'         => 'required',
             'height'        => 'required',
             'line_color'    => 'required',
