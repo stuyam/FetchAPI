@@ -26,7 +26,7 @@ Route::group(['namespace' => 'Fetch\v1\Controllers', 'prefix' => 'v1'], function
 //    });
 
     Route::controller('drawing', 'DrawingController');
-    Route::controller('inbox', 'InboxController');
+    Route::post('drawing/inbox', 'InboxController@index');
 
 });
 

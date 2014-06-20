@@ -18,7 +18,7 @@ class InboxController extends APIController {
 	/**
 	 * @return Response
 	 */
-	public function postGet()
+	public function index()
 	{
         $data = [
             'userid' => Input::get('userid'),
