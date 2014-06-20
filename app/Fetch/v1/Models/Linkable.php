@@ -6,6 +6,8 @@ class Linkable extends \Eloquent {
 
 	protected $fillable = ['userid', 'drawing'];
 
+    public $timestamps = false;
+
     protected $table = 'linkable_drawings';
 
     public function createLinkableDrawing($data)

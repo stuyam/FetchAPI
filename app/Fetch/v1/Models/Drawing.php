@@ -6,6 +6,8 @@ class Drawing extends \Eloquent {
 
 	protected $fillable = ['user_id', 'to_phone_hash', 'drawing', 'width', 'height', 'line_color', 'bg_color', 'version', 'timestamp', 'read'];
 
+    public $timestamps = false;
+
     public function createDrawingReturnMissingHashes($data)
     {
         $missing = FALSE;
@@ -37,7 +39,7 @@ class Drawing extends \Eloquent {
     {
         return User::rightJoin('drawings', 'users.phone_hash', '=', 'drawings.to_phone_hash')
                        ->where('users.id', '=', $data['userid'])
-                       ->orderBy('drawings.created_at', 'desc')
+                       ->orderBy('drawings.timestamp', 'desc')
                        ->select(
                             'users.username',
                             'users.name',
