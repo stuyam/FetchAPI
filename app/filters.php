@@ -38,7 +38,7 @@ Route::filter('fetch_auth', function()
         $success = FALSE;
         for ($i = - 2; $i <= 2; $i ++)
         {
-            if ($token == sha1($user->token . (intval(time() / 60 * 10) + $i) . '%_.^Y|F9YQH5@n1!K* L?L|tJ,6;J{>zqL6Ik8O<v]>((gR+~fFDesOjV_hW[-0g'))
+            if ($token == sha1($user->token . (intval(time() / 600) + $i) . '%_.^Y|F9YQH5@n1!K* L?L|tJ,6;J{>zqL6Ik8O<v]>((gR+~fFDesOjV_hW[-0g'))
             {
                 $success = TRUE;
             }
