@@ -20,6 +20,8 @@ Route::group(['namespace' => 'Fetch\v1\Controllers', 'prefix' => 'v1'], function
 {
     Route::controller('auth', 'AuthController');
 
+    Route::post('test', 'InboxController@test');
+
     Route::group(['before' => 'fetch_auth'], function ()
     {
         Route::post('drawing/inbox', 'InboxController@index');
