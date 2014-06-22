@@ -24,7 +24,7 @@ class DrawingController extends APIController {
         $data = [
             'userid'        => Input::get('userid'),
             'to_phone_hash' => Input::get('to_phone_hash'),
-            'pages'       => Input::get('pages'),
+            'pages'         => Input::get('pages'),
             'width'         => Input::get('width'),
             'height'        => Input::get('height'),
             'line_color'    => Input::get('line_color'),
@@ -50,7 +50,12 @@ class DrawingController extends APIController {
     {
         $data = [
             'userid'        => Input::get('userid'),
-            'drawing'       => Input::get('drawing'),
+            'pages'         => Input::get('pages'),
+            'width'         => Input::get('width'),
+            'height'        => Input::get('height'),
+            'line_color'    => Input::get('line_color'),
+            'bg_color'      => Input::get('bg_color'),
+            'version'       => Input::get('version'),
         ];
 
         if( ! $this->validator->drawingCreateLinkable($data) )
@@ -60,7 +65,7 @@ class DrawingController extends APIController {
 
         $id = $this->linkable->createLinkableDrawing($data);
         $string = Base62::encode($id);
-        return $this->respond($string);
+        return json_encode(['link'=>'http://fetch.es/'.$string], JSON_UNESCAPED_SLASHES);
     }
 
     public function postMissingPhones()

@@ -57,7 +57,12 @@ class Validator {
     {
         $rules = [
             'userid'        => 'required',
-            'drawing'       => 'required',
+            'pages'         => 'required',
+            'width'         => 'required',
+            'height'        => 'required',
+            'line_color'    => 'required',
+            'bg_color'      => 'required',
+            'version'       => 'required',
         ];
 
         return $this->validate($input, $rules);
