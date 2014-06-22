@@ -74,4 +74,9 @@ class InboxController extends APIController {
         return $this->respond($newData);
 	}
 
+    public function test()
+    {
+        return $this->drawing->getInbox(['userid'=>1]);
+    }
+
 }
