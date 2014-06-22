@@ -74,9 +74,4 @@ class InboxController extends APIController {
         return $this->respond($newData);
 	}
 
-    public function test()
-    {
-        return $this->drawing->getInbox(['phone_hash'=>'3ddf68400dbbfa1d7e07bdee5f4bc03c0c3710ee']);
-    }
-
 }
