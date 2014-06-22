@@ -50,6 +50,14 @@ class APIController extends \BaseController {
         ]);
     }
 
+    public function respondNoEscapeJSON($array)
+    {
+        return Response::make(
+            json_encode($array, JSON_UNESCAPED_SLASHES),
+            $this->getStatusCode())
+            ->header('Content-Type', 'application/json');
+    }
+
     //------------------------ 400 ----------------------//
 
     public function respondNotFound($message = 'Not Found')

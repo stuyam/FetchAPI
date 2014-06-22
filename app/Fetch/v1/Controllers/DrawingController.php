@@ -65,7 +65,7 @@ class DrawingController extends APIController {
 
         $id = $this->linkable->createLinkableDrawing($data);
         $string = Base62::encode($id);
-        return json_encode(['link'=>'http://fetch.es/'.$string], JSON_UNESCAPED_SLASHES);
+        return $this->respondNoEscapeJSON(['link'=>'http://fetch.es/'.$string]);
     }
 
     public function postMissingPhones()
