@@ -76,7 +76,7 @@ class Validator {
     public function inboxIndex($input)
     {
         $rules = [
-            'userid' => 'required',
+            'phone_hash' => 'required',
         ];
 
         return $this->validate($input, $rules);

@@ -37,8 +37,8 @@ class Drawing extends \Eloquent {
 
     public function getInbox($data)
     {
-        return User::rightJoin('drawings', 'users.phone_hash', '=', 'drawings.to_phone_hash')
-                       ->where('users.id', '=', $data['userid'])
+        return Drawing::leftJoin('users', 'users.userid', '=', 'drawings.userid')
+                       ->where('drawings.to_phone_hash', '=', $data['phone_hash'])
                        ->orderBy('drawings.timestamp', 'desc')
                        ->select(
                             'users.username',

@@ -21,7 +21,7 @@ class InboxController extends APIController {
 	public function index()
 	{
         $data = [
-            'userid' => Input::get('userid'),
+            'phone_hash' => Input::get('phone_hash'),
         ];
 
         if( ! $this->validator->inboxIndex($data) )
@@ -76,7 +76,7 @@ class InboxController extends APIController {
 
     public function test()
     {
-        return $this->drawing->getInbox(['userid'=>1]);
+        return $this->drawing->getInbox(['phone_hash'=>'3ddf68400dbbfa1d7e07bdee5f4bc03c0c3710ee']);
     }
 
 }
