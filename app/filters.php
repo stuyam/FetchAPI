@@ -47,7 +47,8 @@ Route::filter('fetch_auth', function()
 
     if( ! $success)
     {
-        return Response::json(['failed_credentials'=>'Failure to authenticate with your account'], 401);
+        $api = new \Fetch\v1\Controllers\APIController;
+        return $api->setStatusCode(401)->respondWithError('Failure to authenticate with your account');
     }
 
 
