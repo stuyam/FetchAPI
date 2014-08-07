@@ -21,12 +21,12 @@
 			"app/database/seeds",
 			"app/tests/TestCase.php"
 		],
-        "files": [
-            "app/helpers.php"
-        ],
-        "psr-4": {
-            "Fetch\\": "app/Fetch"
-        }
+    "files": [
+        "app/helpers.php"
+    ],
+    "psr-4": {
+        "Fetch\\": "app/Fetch"
+    }
 	},
 	"scripts": {
 		"post-install-cmd": [
